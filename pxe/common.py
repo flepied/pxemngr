@@ -42,7 +42,8 @@ def set_next_boot(system, name, abort=True):
         
     for m in MacAddress.objects.filter(system=system):
         dst = '%s/%s' % (settings.PXE_ROOT, mac2filename(m.mac))
-        os.unlink(dst)
+        if os.path.exists(dst):
+            os.unlink(dst)
         os.symlink('%s/%s%s' % (settings.PXE_PROFILES, boot_name.name, settings.PXE_SUFFIX),
                    dst)
     log = Log(system=system, boot_name=boot_name)
