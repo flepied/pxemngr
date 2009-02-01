@@ -1,0 +1,31 @@
+#!/usr/bin/python
+#---------------------------------------------------------------
+# Project         : pxemngr
+# File            : nextboot
+# Version         : $Id$
+# Author          : Frederic Lepied
+# Created On      : Sun Feb  1 13:54:41 2009
+# Purpose         : 
+#---------------------------------------------------------------
+
+import sys
+import os
+import settings
+from pxe.models import *
+from pxe.common import *
+
+def error(str):
+    sys.stderr.write(str + '\n')
+    sys.exit(1)
+    
+if len(sys.argv) != 3:
+    error('Usage: %s <system name> <boot name>' % sys.argv[0])
+    
+try:
+    system = System.objects.get(name=sys.argv[1])
+except System.DoesNotExist:
+    error('System %s not defined' % sys.argv[1])
+
+set_next_boot(system, sys.argv[2])
+
+# nextboot ends here

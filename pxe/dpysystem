@@ -1,0 +1,30 @@
+#!/usr/bin/python
+#---------------------------------------------------------------
+# Project         : pxemngr
+# File            : dpysystem
+# Version         : $Id$
+# Author          : Frederic Lepied
+# Created On      : Sun Feb  1 13:54:41 2009
+# Purpose         : 
+#---------------------------------------------------------------
+
+import sys
+import settings
+from pxe.models import *
+from pxe.common import *
+
+if len(sys.argv) != 2:
+    error('Usage: %s <system name>' % sys.argv[0])
+    
+try:
+    system = System.objects.get(name=sys.argv[1])
+except System.DoesNotExist:
+    error('System %s not defined' % sys.argv[1])
+
+print system.name
+for mac in MacAddress.objects.filter(system=system):
+    for i in range(0, 10, 2):
+        sys.stdout.write('%s:' % mac.mac[i:i+2])
+    sys.stdout.write('%s\n' % mac.mac[10:12])
+    
+# addsystem ends here

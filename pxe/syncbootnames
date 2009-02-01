@@ -1,0 +1,36 @@
+#!/usr/bin/python
+#---------------------------------------------------------------
+# Project         : pxemngr
+# File            : syncbootnames
+# Version         : $Id$
+# Author          : Frederic Lepied
+# Created On      : Sun Feb  1 19:17:33 2009
+# Purpose         : 
+#---------------------------------------------------------------
+
+import os
+import settings
+from pxe.models import *
+from pxe.common import *
+
+l = len(settings.PXE_SUFFIX)
+list = []
+for f in os.listdir(settings.PXE_ROOT + '/' + settings.PXE_PROFILES):
+    if f[-l:] == settings.PXE_SUFFIX:
+        list.append(f[:-l])
+
+for b in BootName.objects.all():
+    if b.available:
+        b.available = False
+        b.save()
+
+for n in list:
+    try:
+        boot_name = BootName.objects.get(name=n)
+        boot_name.available = True
+    except BootName.DoesNotExist:
+        boot_name = BootName(name=n, available=True)
+    print 'registering', boot_name.name
+    boot_name.save()
+    
+# syncbootnames ends here
