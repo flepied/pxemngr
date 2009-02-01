@@ -1,0 +1,47 @@
+-*- outline -*-
+
+* PXE Manager
+
+The idea is to build an automaton to control when to boot from the
+local drives and when to boot from the network.
+
+The systems can be used to run automated tests. You can also use this
+system only to provision on demand systems.
+
+The systems must be configured to always boot over PXE.
+
+** Install
+
+- edit the database and PXE config in the settings.py according to
+  your local setup.
+
+- you need python-django installed.
+
+- run ./manage.py syncdb to create the needed sql tables.
+
+- create the PXE profiles in pxelinux.cfg/profiles/ ending in
+  .prof. The local.prof is mandatory and must point to a local boot
+  config. The user running the scripts must have the right to write in
+  pxelinux.cfg. I usually create a group and put it under control of
+  the files under pxelinux.cfg.
+
+- export these 2 environment variables:
+  DJANGO_SETTINGS_MODULE=settings and PYTHONPATH=$PWD.
+
+- run ./pxe/syncbootnames to add the names of the PXE profiles in the
+  database.
+
+- add the systems that you want to control by this system like this:
+./pxe/addsystem <name> <mac address> [<mac address 2>...]
+
+- set which profile you want your system to PXE boot:
+./pxe/nextboot <name> <profile name>
+
+- run ./manage.py runserver <ip addr>:<port> to have a web server
+  waiting for requests to boot locally. You can also configure django
+  to use apache instead of the little embedded server.
+
+- then your PXE runs must access the following web page
+  http://<ipaddr>:<port>/localboot/<mac addr>/ to request a local boot
+  before rebooting else the PXE boot will continue to loop on the same
+  install.
