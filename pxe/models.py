@@ -1,3 +1,12 @@
+#---------------------------------------------------------------
+# Project         : pxemngr
+# File            : models.py
+# Copyright       : 2009 Splitted-Desktop Systems
+# Author          : Frederic Lepied
+# Created On      : Sun Feb  1 13:54:41 2009
+# Purpose         : describe sql tables.
+#---------------------------------------------------------------
+
 from django.db import models
 
 class System(models.Model):

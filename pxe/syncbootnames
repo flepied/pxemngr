@@ -2,10 +2,11 @@
 #---------------------------------------------------------------
 # Project         : pxemngr
 # File            : syncbootnames
-# Version         : $Id$
+# Copyright       : 2009 Splitted-Desktop Systems
 # Author          : Frederic Lepied
 # Created On      : Sun Feb  1 19:17:33 2009
-# Purpose         : 
+# Purpose         : read the pxe directory containing the profiles
+#                   and add them to the database as available.
 #---------------------------------------------------------------
 
 import os

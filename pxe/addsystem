@@ -2,10 +2,11 @@
 #---------------------------------------------------------------
 # Project         : pxemngr
 # File            : addsystem
-# Version         : $Id$
+# Copyright       : 2009 Splitted-Desktop Systems
 # Author          : Frederic Lepied
 # Created On      : Sun Feb  1 13:54:41 2009
-# Purpose         : 
+# Purpose         : add a system and its mac addresses to the
+#                  database.
 #---------------------------------------------------------------
 
 import sys

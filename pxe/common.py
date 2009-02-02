@@ -1,10 +1,10 @@
 #---------------------------------------------------------------
 # Project         : pxemngr
 # File            : common.py
-# Version         : $Id$
+# Copyright       : 2009 Splitted-Desktop Systems
 # Author          : Frederic Lepied
 # Created On      : Sun Feb  1 19:03:58 2009
-# Purpose         : 
+# Purpose         : common functions used by scripts and web logic.
 #---------------------------------------------------------------
 
 import sys

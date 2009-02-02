@@ -1,3 +1,12 @@
+#---------------------------------------------------------------
+# Project         : pxemngr
+# File            : Makefile
+# Copyright       : 2009 Splitted-Desktop Systems
+# Author          : Frederic Lepied
+# Created On      : Sun Feb  1 13:54:41 2009
+# Purpose         : build rules
+#---------------------------------------------------------------
+
 VERSION=0.1
 
 all:

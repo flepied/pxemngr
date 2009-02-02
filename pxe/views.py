@@ -1,3 +1,12 @@
+#---------------------------------------------------------------
+# Project         : pxemngr
+# File            : views.py
+# Copyright       : 2009 Splitted-Desktop Systems
+# Author          : Frederic Lepied
+# Created On      : Sun Feb  1 13:54:41 2009
+# Purpose         : http logic
+#---------------------------------------------------------------
+
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from common import *
