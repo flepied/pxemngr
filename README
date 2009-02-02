@@ -6,7 +6,9 @@ The idea is to build an automaton to control when to boot from the
 local drives and when to boot from the network.
 
 The systems can be used to run automated tests. You can also use this
-system only to provision on demand systems.
+system only to provision on demand systems or backup your partitions
+using partimage or anything you want to do with an automated PXE
+system...
 
 The systems must be configured to always boot over PXE.
 
@@ -32,16 +34,28 @@ The systems must be configured to always boot over PXE.
   database.
 
 - add the systems that you want to control by this system like this:
+
 ./pxe/addsystem <name> <mac address> [<mac address 2>...]
 
 - set which profile you want your system to PXE boot:
+
 ./pxe/nextboot <name> <profile name>
 
 - run ./manage.py runserver <ip addr>:<port> to have a web server
   waiting for requests to boot locally. You can also configure django
   to use apache instead of the little embedded server.
 
-- then your PXE runs must access the following web page
+- then your PXE scripts must access the following web page
   http://<ipaddr>:<port>/localboot/<mac addr>/ to request a local boot
   before rebooting else the PXE boot will continue to loop on the same
   install.
+
+** Advanced
+
+- in your auto-install scripts, you can access the current profile by
+  accessing the following url: http://<ipaddr>:<port>/profile/<mac addr>/
+
+- here is the shell command I use to get the mac address:
+
+mac=`ifconfig |grep HWaddr|sed -e 's/.*HWaddr //' -e 's/-/:/' -e 's/ *//g' |head -1`
+
