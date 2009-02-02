@@ -11,10 +11,6 @@ class BootName(models.Model):
     name = models.CharField(max_length=100)
     available = models.BooleanField()
     
-class NextBoot(models.Model):
-    system = models.ForeignKey(System)
-    boot_name = models.ForeignKey(BootName)
-
 class Log(models.Model):
     date = models.DateTimeField(auto_now=True, auto_now_add=True)
     system = models.ForeignKey(System)
