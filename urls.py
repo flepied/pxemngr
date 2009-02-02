@@ -15,4 +15,5 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     # (r'^admin/(.*)', admin.site.root),
     (r'^localboot/(?P<mac>[a-fA-F0-9:-]+)/$', 'pxe.views.localboot'),
+    (r'^profile/(?P<mac>[a-fA-F0-9:-]+)/$', 'pxe.views.profile'),
 )
