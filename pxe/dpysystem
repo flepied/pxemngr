@@ -2,10 +2,11 @@
 #---------------------------------------------------------------
 # Project         : pxemngr
 # File            : dpysystem
-# Version         : $Id$
+# Copyright       : 2009 Splitted-Desktop Systems
 # Author          : Frederic Lepied
 # Created On      : Sun Feb  1 13:54:41 2009
-# Purpose         : 
+# Purpose         : report the list of systems or informations
+#                 about one system.
 #---------------------------------------------------------------
 
 import sys
@@ -14,27 +15,31 @@ from pxe.models import *
 from pxe.common import *
 
 if len(sys.argv) != 2:
-    error('Usage: %s <system name>' % sys.argv[0])
+    error('Usage: %s <system name>|-l' % sys.argv[0])
+
+if sys.argv[1] == '-l':
+    for s in System.objects.all():
+        print s.name
+else:
+    try:
+        system = System.objects.get(name=sys.argv[1])
+    except System.DoesNotExist:
+        error('System %s not defined' % sys.argv[1])
     
-try:
-    system = System.objects.get(name=sys.argv[1])
-except System.DoesNotExist:
-    error('System %s not defined' % sys.argv[1])
-
-print 'Name:', system.name
-
-for mac in MacAddress.objects.filter(system=system):
-    print 'Mac:',
-    for i in range(0, 10, 2):
-        sys.stdout.write('%s:' % mac.mac[i:i+2])
-    sys.stdout.write('%s\n' % mac.mac[10:12])
-
-logs = Log.objects.filter(system=system).order_by('-date')
-if len(logs) >= 1:
-    print 'Next boot:', logs[0].boot_name.name
-
-print 'History:'
-for l in logs[1:]:
-    print l.date, l.boot_name.name
+    print 'Name:', system.name
+    
+    for mac in MacAddress.objects.filter(system=system):
+        print 'Mac:',
+        for i in range(0, 10, 2):
+            sys.stdout.write('%s:' % mac.mac[i:i+2])
+        sys.stdout.write('%s\n' % mac.mac[10:12])
+    
+    logs = Log.objects.filter(system=system).order_by('-date')
+    if len(logs) >= 1:
+        print 'Next boot:', logs[0].boot_name.name
+    
+    print 'History:'
+    for l in logs[1:]:
+        print l.date, l.boot_name.name
     
 # addsystem ends here
