@@ -21,10 +21,20 @@ try:
 except System.DoesNotExist:
     error('System %s not defined' % sys.argv[1])
 
-print system.name
+print 'Name:', system.name
+
 for mac in MacAddress.objects.filter(system=system):
+    print 'Mac:',
     for i in range(0, 10, 2):
         sys.stdout.write('%s:' % mac.mac[i:i+2])
     sys.stdout.write('%s\n' % mac.mac[10:12])
+
+logs = Log.objects.filter(system=system).order_by('-date')
+if len(logs) >= 1:
+    print 'Next boot:', logs[0].boot_name.name
+
+print 'History:'
+for l in logs[1:]:
+    print l.date, l.boot_name.name
     
 # addsystem ends here
