@@ -14,7 +14,7 @@ all:
 	@exit 1
 
 dist: clean
-	cd ..; tar jcvf pxemngr-$(VERSION).tar.bz2 --exclude .svn --exclude pxe.db pxemngr
+	cd ..; tar jcvf pxemngr-$(VERSION).tar.bz2 --exclude .git --exclude pxe.db pxemngr
 
 clean:
 	find . -name '*~' -o -name '*.pyc'|xargs rm -f
