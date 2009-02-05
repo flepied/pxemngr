@@ -1,0 +1,34 @@
+-*- outline -*-
+
+* PXE installer
+
+** How to build
+
+Edit the build.sh and init files to put your repositories and pxemngr
+urls. The build.sh script builds an initrd from a Debian Lenny
+repository. You must run it as root, for example, like this:
+
+./build.sh
+
+This builds a chroot and copy a special init in the lenny-root
+directory. After the build, copy the kernel image to the pxe directory
+and then create the initrd with a command like this as root:
+
+find . | cpio -o -H newc | gzip -v9 > /var/lib/tftpboot/pxeinstaller.img
+
+Then add a profile for pxemngr in
+/var/lib/tftpboot/pxelinux.cfg/profiles/gen.prof like:
+
+prompt 0
+timeout 0
+default 0
+
+label 0
+  kernel vmlinuz-2.6.26-1-686
+  append initrd=pxeinstaller.img ramdisk_size=210000 root=/dev/ram0 rw
+
+** How to use it
+
+The init script downloads an install script from the follwing url:
+$insturl/$profile/install.script and runs it. This way you have a
+generic installer that can do whatever you want.

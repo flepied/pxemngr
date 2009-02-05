@@ -1,0 +1,60 @@
+#!/bin/bash
+
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+export PATH
+
+set -x
+
+mount /proc
+
+booturl=http://10.33.0.1:8000
+insturl=http://10.33.0.1/profiles
+
+eval `cat /proc/cmdline | tr " " "\n" | grep booturl=`
+eval `cat /proc/cmdline | tr " " "\n" | grep insturl=`
+
+# usb setup
+if grep -q ' usb' /proc/cmdline; then
+    modprobe ohci-hcd
+    modprobe ehci-hcd
+    modprobe usbhid
+fi
+
+# setup network
+pciids=`lspci -n|grep ' 0200: '|sed 's/.*\([0-9a-f]\{4\}\):\([0-9a-f]\{4\}\).*/0x0000\1 0x0000\2/'|sort -u`
+kver=`uname -r`
+
+for pciid in $pciids; do
+    modules=`grep "$pciid" /lib/modules/$kver/modules.pcimap |cut -f1 -d' '|sort -u`
+    
+    for module in $modules; do
+	modprobe $module && break
+    done
+done
+
+dhclient eth0
+
+# request install script from the server
+mac=`ifconfig |grep HWaddr|sed -e 's/.*HWaddr //' -e 's/-/:/' -e 's/ *//g' |head -1`
+profile=`wget -q -O- $booturl/profile/$mac/`
+wget -q $insturl/$profile/install.script || wget -q $insturl/install.script
+export mac
+export profile
+chmod +x install.script
+./install.script
+
+# request localboot if the install script exited with a good status
+if [ $? = 0 ]; then
+    wget -q $booturl/localboot/$mac/
+else
+    echo "failed install"
+fi
+
+# if debug is passed on the cmdline of the kernel, launch a shell else reboot
+if grep -q ' debug' /proc/cmdline; then
+    exec /bin/bash
+else
+    reboot -f
+fi
+
+# init ends here
