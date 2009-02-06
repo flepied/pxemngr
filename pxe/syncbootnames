@@ -20,6 +20,17 @@ for f in os.listdir(settings.PXE_ROOT + '/' + settings.PXE_PROFILES):
     if f[-l:] == settings.PXE_SUFFIX:
         list.append(f[:-l])
 
+if 'local' not in list:
+    print 'error local profile not present. Add it with a content like this:'
+    print
+    print '''prompt 0
+timeout 0
+default 0
+
+label 0
+  LOCALBOOT 0
+'''
+
 for b in BootName.objects.all():
     if b.available:
         b.available = False
