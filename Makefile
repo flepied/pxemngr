@@ -7,11 +7,23 @@
 # Purpose         : build rules
 #---------------------------------------------------------------
 
-VERSION=0.1
+VERSION=0.2
+
+bindir=/usr/bin
+libdir=/usr/share/pxemngr
+etcdir=/etc
 
 all:
-	@echo "use 'make dist' to build a tar ball"
+	@echo "use 'make dist' to build a tar ball."
+	@echo "use 'make install' to install the files in the system."
 	@exit 1
+
+install:
+	mkdir -p $(DESTDIR)$(bindir) $(DESTDIR)$(libdir)/pxe $(DESTDIR)$(etcdir)
+	install pxe/pxemngr $(DESTDIR)$(bindir)/pxemngr
+	install -m 644 pxe/pxemngr.conf $(DESTDIR)$(etcdir)/pxemngr.conf
+	install *.py $(DESTDIR)$(libdir)/
+	install pxe/*.py pxe/{addsystem,dpysystem,nextboot,syncbootnames} $(DESTDIR)$(libdir)/pxe/
 
 dist: clean
 	cd ..; tar jcvf pxemngr-$(VERSION).tar.bz2 --exclude .git --exclude pxe.db pxemngr
