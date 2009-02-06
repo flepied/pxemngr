@@ -1,0 +1,40 @@
+#!/bin/sh
+#---------------------------------------------------------------
+# Project         : pxemngr
+# File            : pxemngr
+# Copyright       : 2009 Splitted-Desktop Systems
+# Author          : Frederic Lepied
+# Created On      : Fri Feb  6 09:12:51 2009
+# Purpose         : execute pxemngr sub-commands according to the
+#                  configuration file.
+#---------------------------------------------------------------
+
+CONF=${PXEMNGR_CONF=/etc/pxemngr.conf}
+
+. $CONF
+
+if [ -z "$BASEDIR" ]; then
+    echo "BASEDIR not defined in $CONF" 1>&2
+    exit 1
+fi
+
+if [ $# -lt 1 ]; then
+    echo "Usage: `basename $0` <sub-command> [<args>...]" 1>&2
+    exit 1
+fi
+
+if [ ! -x "$BASEDIR"/pxe/$1 ]; then
+    echo "Invalid pxemngr sub-command $1" 1>&2
+fi
+
+PYTHONPATH="$BASEDIR":$PYTHONPATH
+DJANGO_SETTINGS_MODULE=settings
+export PYTHONPATH
+export DJANGO_SETTINGS_MODULE
+
+cmd="$1"
+shift
+
+exec "$BASEDIR/pxe/$cmd" "$@"
+
+# pxemngr ends here
