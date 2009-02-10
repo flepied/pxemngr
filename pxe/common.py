@@ -9,18 +9,38 @@
 
 import sys
 import os
+import re
 import settings
-from pxe.models import *
+from models import *
 
+IP_REGEXP = re.compile('^.*\s([0-9A-F:]+)\s.*')
+
+def mac_to_ip(mac):
+    for line in open('/proc/net/arp').readlines():
+        if line.find(mac) != -1:
+            res = IP_REGEXP.search(line)
+            if res:
+                return res.group(1)
+    return False
+
+def get_mac(request):
+    mac = mac_to_ip(request.META['REMOTE_ADDR'])
+    if not mac:
+        raise Http404
+    print 'get_mac', mac
+    return mac
+    
 def error(str):
     sys.stderr.write(str + '\n')
     sys.exit(1)
 
 def simplify_mac(s):
     '''Remove : or - between hexa numbers for a MAC address. Always return the address in lowercase'''
+    print 'simplify_mac', s
     ss = s.replace('-', '')
     sss = ss.replace(':', '')
     if len(sss) != 12:
+        print 'invalid length (not 12)', sss, len(sss)
         raise ValueError
     return sss.lower()
 
