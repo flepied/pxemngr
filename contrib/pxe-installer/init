@@ -36,16 +36,15 @@ dhclient eth0
 
 # request install script from the server
 mac=`ifconfig |grep HWaddr|sed -e 's/.*HWaddr //' -e 's/-/:/' -e 's/ *//g' |head -1`
-profile=`wget -q -O- $booturl/profile/$mac/`
+profile=`wget -q -O- $booturl/profile/`
 wget -q $insturl/$profile/install.script || wget -q $insturl/install.script
-export mac
 export profile
 chmod +x install.script
 ./install.script 2>&1 | tee log
 
 # request localboot if the install script exited with a good status
 if [ $? = 0 ]; then
-    wget -q $booturl/localboot/$mac/
+    wget -q $booturl/localboot/
 else
     echo "failed install"
 fi
