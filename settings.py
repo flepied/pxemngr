@@ -16,6 +16,19 @@ DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
+# pxe related settings
+
+PXE_ROOT='/var/lib/tftpboot/pxelinux.cfg'
+PXE_PROFILES = 'profiles'
+PXE_SUFFIX = '.prof'
+PXE_LOCAL = 'local'
+
+# test related settings
+
+TESTS_DIR = '/home/flepied/work/tests/'
+TEST_SUFFIX = '.test'
+TEST_UPLOAD_DIR = '/home/flepied/work/tests/results/'
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -70,6 +83,8 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     '/home/flepied/work/pxemngr/pxe/templates',
+    '/home/flepied/work/pxemngr/tester/templates',
+    TESTS_DIR,
 )
 
 INSTALLED_APPS = (
@@ -78,10 +93,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'pxe',
-#    'django.contrib.admin',
+    'tester',
+    #'django.contrib.admin',
 )
-
-PXE_ROOT='/var/lib/tftpboot/pxelinux.cfg'
-PXE_PROFILES = 'profiles'
-PXE_SUFFIX = '.prof'
-PXE_LOCAL = 'local'

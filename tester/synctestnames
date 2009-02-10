@@ -1,0 +1,38 @@
+#!/usr/bin/python
+#---------------------------------------------------------------
+# Project         : tester
+# File            : synctestnames
+# Version         : $Id$
+# Author          : Frederic Lepied
+# Created On      : Mon Feb  9 13:17:00 2009
+# Purpose         : 
+#---------------------------------------------------------------
+
+import os
+import settings
+from tester.models import *
+
+l = len(settings.TEST_SUFFIX)
+list = []
+for f in os.listdir(settings.TESTS_DIR):
+    if f[-l:] == settings.TEST_SUFFIX:
+        list.append(f[:-l])
+
+if 'wait' not in list:
+    print 'you must add a wait test'
+
+for b in TestName.objects.all():
+    if b.available:
+        b.available = False
+        b.save()
+
+for n in list:
+    try:
+        test_name = TestName.objects.get(name=n)
+        test_name.available = True
+    except TestName.DoesNotExist:
+        test_name = TestName(name=n, available=True)
+    print 'registering', test_name.name
+    test_name.save()
+
+# synctestnames ends here

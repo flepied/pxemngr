@@ -1,0 +1,41 @@
+#!/usr/bin/python
+#---------------------------------------------------------------
+# Project         : pxemngr
+# File            : nexttest
+# Copyright       : 2009 Splitted-Desktop Systems
+# Author          : Frederic Lepied
+# Created On      : Sun Feb  1 13:54:41 2009
+# Purpose         : configure the profile for the next PXE test
+#                   of a system.
+#---------------------------------------------------------------
+
+import sys
+import os
+import settings
+from pxe.models import *
+from tester.models import *
+from pxe.common import *
+
+def set_next_test(system, name, abort=True):
+    try:
+        test_name = TestName.objects.get(name=name)
+    except TestName.DoesNotExist:
+        if abort:
+            error('Test name %s not defined' % name)
+        else:
+            raise TestName.DoesNotExist
+    
+    log = TestLog(system=system, test_name=test_name)
+    log.save()
+
+if len(sys.argv) != 3:
+    error('Usage: %s <system name> <test name>' % sys.argv[0])
+    
+try:
+    system = System.objects.get(name=sys.argv[1])
+except System.DoesNotExist:
+    error('System %s not defined' % sys.argv[1])
+
+set_next_test(system, sys.argv[2])
+
+# nexttest ends here

@@ -16,6 +16,10 @@ urlpatterns = patterns('',
     (r'^localboot/$', 'pxe.views.localboot1'),
     (r'^profile/(?P<mac>[a-fA-F0-9:-]+)/$', 'pxe.views.profile'),
     (r'^profile/$', 'pxe.views.profile1'),
+                       
+    (r'^upload/$', 'tester.views.upload_file'),
+    (r'^nexttest/$', 'tester.views.next_test1'),
+    (r'^nexttest/(?P<mac>[a-fA-F0-9:-]+)/$', 'tester.views.next_test'),
     
     # Uncomment the next line to enable the admin:
     #(r'^admin/(.*)', admin.site.root),

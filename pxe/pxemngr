@@ -23,7 +23,7 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 
-if [ ! -x "$BASEDIR"/pxe/$1 ]; then
+if [ ! -x "$BASEDIR"/pxe/$1 -a ! -x "$BASEDIR"/tester/$1 ]; then
     echo "Invalid pxemngr sub-command $1" 1>&2
 fi
 
@@ -35,6 +35,10 @@ export DJANGO_SETTINGS_MODULE
 cmd="$1"
 shift
 
-exec "$BASEDIR/pxe/$cmd" "$@"
+if [ -x "$BASEDIR"/pxe/$cmd ]; then
+    exec "$BASEDIR/pxe/$cmd" "$@"
+else
+    exec "$BASEDIR/tester/$cmd" "$@"
+fi
 
 # pxemngr ends here

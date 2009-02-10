@@ -1,0 +1,37 @@
+#!/usr/bin/python
+#---------------------------------------------------------------
+# Project         : tester
+# File            : dpytest
+# Copyright       : 2009 Splitted-Desktop Systems
+# Author          : Frederic Lepied
+# Created On      : Sun Feb  1 13:54:41 2009
+# Purpose         : report the list of available tests or information
+#                 about tests for one system.
+#---------------------------------------------------------------
+
+import sys
+import settings
+from pxe.models import *
+from pxe.common import *
+from tester.models import *
+
+if len(sys.argv) != 2:
+    error('Usage: %s <system name>|-l' % sys.argv[0])
+
+if sys.argv[1] == '-l':
+    for s in TestName.objects.all():
+        print s.name
+else:
+    try:
+        system = System.objects.get(name=sys.argv[1])
+    except System.DoesNotExist:
+        error('System %s not defined' % sys.argv[1])
+    
+    print 'Name:', system.name
+    
+    logs = TestLog.objects.filter(system=system).order_by('-date')
+
+    for l in logs:
+        print l.date, l.test_name.name, l.status
+    
+# dpytest ends here
