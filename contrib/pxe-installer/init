@@ -41,7 +41,7 @@ wget -q $insturl/$profile/install.script || wget -q $insturl/install.script
 export mac
 export profile
 chmod +x install.script
-./install.script
+./install.script 2>&1 | tee log
 
 # request localboot if the install script exited with a good status
 if [ $? = 0 ]; then
