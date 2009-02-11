@@ -9,8 +9,8 @@
 
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404
-from common import *
-from models import *
+from pxe.common import *
+from pxe.models import *
 
 def localboot1(request):
     return localboot(request, get_mac(request))

@@ -1,8 +1,8 @@
 from django.conf.urls.defaults import *
 
 # Uncomment the next two lines to enable the admin:
-#from django.contrib import admin
-#admin.autodiscover()
+from django.contrib import admin
+admin.autodiscover()
 
 urlpatterns = patterns('',
     # Example:
@@ -21,6 +21,11 @@ urlpatterns = patterns('',
     (r'^nexttest/$', 'tester.views.next_test1'),
     (r'^nexttest/(?P<mac>[a-fA-F0-9:-]+)/$', 'tester.views.next_test'),
     
+    (r'^$', 'tester.views.index'),
+    (r'^tests/(?P<verid>[0-9]+)/$', 'tester.views.logs'),
+    (r'^test/(?P<logid>[0-9]+)/$', 'tester.views.log'),
+    (r'^testcontent/(?P<logid>[0-9]+)/$', 'tester.views.content'),
+
     # Uncomment the next line to enable the admin:
-    #(r'^admin/(.*)', admin.site.root),
+    (r'^admin/(.*)', admin.site.root),
 )

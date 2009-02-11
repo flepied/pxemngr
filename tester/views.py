@@ -1,5 +1,7 @@
+import re
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render_to_response, get_object_or_404
+from django.core.servers.basehttp import FileWrapper
 from forms import UploadFileForm
 from pxe.common import *
 from tester.models import *
@@ -19,6 +21,7 @@ def upload_file(request):
             log.save()
             print 'valid', log.status
             handle_uploaded_file(request.FILES['file'], log.id)
+            process_file(log)
             return HttpResponse("uploaded", mimetype="text/plain")
         else:
             log.status = 'E'
@@ -28,12 +31,51 @@ def upload_file(request):
         form = UploadFileForm()
     return render_to_response('upload.html', {'form': form})
 
+def get_filename(id):
+    return '%s/%d.log' % (settings.TEST_UPLOAD_DIR, id)
+
 def handle_uploaded_file(f, id):
-    destination = open('%s/%d.log' % (settings.TEST_UPLOAD_DIR, id), 'wb+')
+    destination = open(get_filename(id), 'wb+')
     for chunk in f.chunks():
         destination.write(chunk)
     destination.close()
 
+info_regexp = re.compile('^([IEWSVT]): (.*)')
+
+def add_info_line(type, text, log):
+    i = InfoLine(type=type, text=text, log=log)
+    i.save()
+    return i
+
+def process_file(log):
+    info = 0
+    error = 0
+    warning = 0
+    for line in open(get_filename(log.id)).readlines():
+        res = info_regexp.search(line)
+        if res:
+            if res.group(1) == 'I':
+                info = info + 1
+                add_info_line(res.group(1), res.group(2), log)
+            elif res.group(1) == 'E':
+                error = error + 1
+                add_info_line(res.group(1), res.group(2), log)
+            elif res.group(1) == 'W':
+                warning = warning + 1
+                add_info_line(res.group(1), res.group(2), log)
+            elif res.group(1) == 'V':
+                version = res.group(2)
+                try:
+                    v = SystemVersion.objects.get(name=version)
+                except SystemVersion.DoesNotExist:
+                    v = SystemVersion(name=version)
+                    v.save()
+                log.version = v
+    log.warnings = warning
+    log.infos = info
+    log.errors = error
+    log.save()
+    
 def next_test1(request):
     mac = get_mac(request)
     return next_test(request, mac)
@@ -48,6 +90,29 @@ def next_test(request, mac):
         name = log.test_name.name
         log.status = 'S'
         log.save()
-    return render_to_response(name + settings.TEST_SUFFIX, {'testname', name})
+    print "%s (%s) -> %s" % (s.name, mac, name)
+    return render_to_response(name + settings.TEST_SUFFIX, {'testname': name, 'system': s.name})
+
+def logs(request, verid):
+    version = get_object_or_404(SystemVersion, id=verid)
+    logs = TestLog.objects.filter(version=version).order_by('-date')
+    return render_to_response('logs.html', {'logs': logs, 'version': version})    
+
+def log(request, logid):
+    log = get_object_or_404(TestLog, id=logid)
+    infos = InfoLine.objects.filter(log=log).order_by('id')
+    return render_to_response('log.html', {'log': log, 'infos': infos})    
+
+def content(request, logid):
+    log = get_object_or_404(TestLog, id=logid)
+    filename = get_filename(log.id)
+    wrapper = FileWrapper(file(filename))
+    response = HttpResponse(wrapper, content_type='text/plain')
+    response['Content-Length'] = os.path.getsize(filename)
+    return response
+
+def index(request):
+    versions = SystemVersion.objects.all().order_by('-id')
+    return render_to_response('index.html', {'versions': versions})    
     
 # views.py ends here

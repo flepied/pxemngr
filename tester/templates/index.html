@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Versions</h1>
+<ul>
+{% for version in versions %}
+<li><a href="/tests/{{ version.id }}/">{{ version.name }}</a></li>
+{% endfor %}
+</ul>
+{% endblock %}

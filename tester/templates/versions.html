@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<ul>
+{% for log in logs %}
+<li><a href="/test/{{ log.id }}/">{{ log.test_name.name }}</a> ({% ifequal log.status 'D' %}{{ log.errors }} errors{% else %}{{ log.status }}{% endifequal %}</li>
+{% endfor %}
+</ul>
+{% endblock %}

@@ -24,5 +24,11 @@ class Log(models.Model):
     date = models.DateTimeField(auto_now=True, auto_now_add=True)
     system = models.ForeignKey(System)
     boot_name = models.ForeignKey(BootName)
-    
+
+from django.contrib import admin
+admin.site.register(System)
+admin.site.register(MacAddress)
+admin.site.register(BootName)
+admin.site.register(Log)
+
 # models.py ends here

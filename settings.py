@@ -27,7 +27,7 @@ PXE_LOCAL = 'local'
 
 TESTS_DIR = '/home/flepied/work/tests/'
 TEST_SUFFIX = '.test'
-TEST_UPLOAD_DIR = '/home/flepied/work/tests/results/'
+TEST_UPLOAD_DIR = '/home/flepied/work/test-results/'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -94,5 +94,5 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'pxe',
     'tester',
-    #'django.contrib.admin',
+    'django.contrib.admin',
 )
