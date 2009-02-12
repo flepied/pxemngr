@@ -18,13 +18,24 @@ if [ -z "$BASEDIR" ]; then
     exit 1
 fi
 
+print_subcommands() {
+    echo "Available sub-commands:"
+    cd "$BASEDIR"/pxe/$1
+    find . -perm -111 -a -type f|sed 's@./@    @'
+    cd "$BASEDIR"/tester/$1
+    find . -perm -111 -a -type f|sed 's@./@    @'
+}
+
 if [ $# -lt 1 ]; then
     echo "Usage: `basename $0` <sub-command> [<args>...]" 1>&2
+    print_subcommands
     exit 1
 fi
 
 if [ ! -x "$BASEDIR"/pxe/$1 -a ! -x "$BASEDIR"/tester/$1 ]; then
     echo "Invalid pxemngr sub-command $1" 1>&2
+    print_subcommands
+    exit 1
 fi
 
 PYTHONPATH="$BASEDIR":$PYTHONPATH
