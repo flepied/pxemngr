@@ -27,7 +27,9 @@ install:
 	install tester/*.py tester/{dpytest,nexttest,synctestnames} $(DESTDIR)$(libdir)/tester/
 
 dist: clean
-	cd ..; tar jcvf pxemngr-$(VERSION).tar.bz2 --exclude .git --exclude pxe.db pxemngr
+	cd ..; mkdir pxemngr-$(VERSION); tar c -C pxemngr --exclude .git --exclude pxe.db .|tar x -C pxemngr-$(VERSION)
+	cd ..; tar jcvf pxemngr-$(VERSION).tar.bz2 pxemngr-$(VERSION)
+	rm -rf ../pxemngr-$(VERSION)
 
 clean:
 	find . -name '*~' -o -name '*.pyc'|xargs rm -f
