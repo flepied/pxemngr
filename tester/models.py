@@ -4,9 +4,15 @@ from pxe.models import *
 class TestName(models.Model):
     name = models.CharField(max_length=100)
     available = models.BooleanField()
-
+    
+    def __str__(self):
+        return self.name
+    
 class SystemVersion(models.Model):
     name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 class TestLog(models.Model):
     STATUS_CHOICES = (
@@ -25,10 +31,16 @@ class TestLog(models.Model):
     errors = models.IntegerField(default=0)
     version = models.ForeignKey(SystemVersion, null=True)
 
+    def __str__(self):
+        return "%s %s" % (self.test_name, self.status)
+
 class InfoLine(models.Model):
     type = models.CharField(max_length=1)
     log = models.ForeignKey(TestLog)
     text = models.CharField(max_length=100)
+
+    def __str__(self):
+        return "%s for %s" % (self.type, self.log)
 
 from django.contrib import admin
 admin.site.register(SystemVersion)
