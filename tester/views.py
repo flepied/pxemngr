@@ -6,16 +6,13 @@ from forms import UploadFileForm
 from pxe.common import *
 from tester.models import *
 
-def upload_file(request):
-    print 'upload_file'
+def upload_file(request, logid):
+    print 'upload_file', logid
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         mac = get_mac(request)
         s = get_object_or_404(System, macaddress__mac=simplify_mac(mac))
-        logs = TestLog.objects.filter(system=s, status='S').order_by('date')
-        if len(logs) == 0:
-            raise Http404
-        log = logs[0]
+        log = get_object_or_404(TestLog, id=logid)
         if form.is_valid():
             log.status = 'D'
             log.save()
@@ -90,8 +87,10 @@ def next_test(request, mac):
         name = log.test_name.name
         log.status = 'S'
         log.save()
-    print "%s (%s) -> %s" % (s.name, mac, name)
-    return render_to_response(name + settings.TEST_SUFFIX, {'testname': name, 'system': s.name})
+    else:
+        log = None
+    print "%s (%s) -> %s (%s)" % (s.name, mac, name, str(log))
+    return render_to_response(name + settings.TEST_SUFFIX, {'testname': name, 'system': s.name, 'log': log})
 
 def logs(request, verid):
     version = get_object_or_404(SystemVersion, id=verid)
@@ -101,7 +100,7 @@ def logs(request, verid):
 def log(request, logid):
     log = get_object_or_404(TestLog, id=logid)
     infos = InfoLine.objects.filter(log=log).order_by('id')
-    return render_to_response('log.html', {'log': log, 'infos': infos})    
+    return render_to_response('log.html', {'log': log, 'infos': infos})
 
 def content(request, logid):
     log = get_object_or_404(TestLog, id=logid)

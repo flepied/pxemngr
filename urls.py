@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     (r'^profile/(?P<mac>[a-fA-F0-9:-]+)/$', 'pxe.views.profile'),
     (r'^profile/$', 'pxe.views.profile1'),
                        
-    (r'^upload/$', 'tester.views.upload_file'),
+    (r'^upload/(?P<logid>[0-9]+)/$', 'tester.views.upload_file'),
     (r'^nexttest/$', 'tester.views.next_test1'),
     (r'^nexttest/(?P<mac>[a-fA-F0-9:-]+)/$', 'tester.views.next_test'),
     

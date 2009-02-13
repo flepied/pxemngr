@@ -74,10 +74,10 @@ must wait for some time and then exit to let the system send a new
 test if needed or send back a new wait.test.
 
 After the execution of a test script, the result is sent back to the
-server using the following url: http://<ipaddr>:<port>/upload/. I
+server using the following url: http://<ipaddr>:<port>/upload/<test id>/. I
 usualy run the following curl command to upload the result:
 
-curl --retry 0 -s -f -F "file=@$output" http://<ipaddr>:<port>/upload/
+curl --retry 0 -s -f -F "file=@$output" http://<ipaddr>:<port>/upload/<test id>/
 
 These uploaded files are stored under the directory set by the
 TEST_UPLOAD_DIR variable in settings.py.
