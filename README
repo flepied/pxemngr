@@ -30,32 +30,79 @@ The systems must be configured to always boot over PXE.
 - export these 2 environment variables:
   DJANGO_SETTINGS_MODULE=settings and PYTHONPATH=$PWD.
 
-- run ./pxe/syncbootnames to add the names of the PXE profiles in the
+- run pxemngr syncbootnames to add the names of the PXE profiles in the
   database.
 
 - add the systems that you want to control by this system like this:
 
-./pxe/addsystem <name> <mac address> [<mac address 2>...]
+pxemngr addsystem <name> <mac address> [<mac address 2>...]
 
 - set which profile you want your system to PXE boot:
 
-./pxe/nextboot <name> <profile name>
+pxemngr nextboot <name> <profile name>
 
 - run ./manage.py runserver <ip addr>:<port> to have a web server
   waiting for requests to boot locally. You can also configure django
   to use apache instead of the little embedded server.
 
 - then your PXE scripts must access the following web page
-  http://<ipaddr>:<port>/localboot/<mac addr>/ to request a local boot
+  http://<ipaddr>:<port>/localboot/ to request a local boot
   before rebooting else the PXE boot will continue to loop on the same
   install.
 
 ** Advanced
 
 - in your auto-install scripts, you can access the current profile by
-  accessing the following url: http://<ipaddr>:<port>/profile/<mac addr>/
+  accessing the following url: http://<ipaddr>:<port>/profile/
 
-- here is the shell command I use to get the mac address:
+** Test system
 
-mac=`ifconfig |grep HWaddr|sed -e 's/.*HWaddr //' -e 's/-/:/' -e 's/ *//g' |head -1`
+*** Description
+
+The test system allows to provide test scripts to running systems
+declared in the PXE manager database.
+
+The target system can request a test by using this url:
+http://<ipaddr>:<port>/nexttest/
+
+The tests are usually shell scripts that are built using Django
+templating system. By convention, the tests are usinf a suffix of
+.test. They are stored in the directory set in settings.py under the
+TESTS_DIR variable. A wait.test must exist and will be send by the
+server to the target system when no test are available. This wait.test
+must wait for some time and then exit to let the system send a new
+test if needed or send back a new wait.test.
+
+After the execution of a test script, the result is sent back to the
+server using the following url: http://<ipaddr>:<port>/upload/. I
+usualy run the following curl command to upload the result:
+
+curl --retry 0 -s -f -F "file=@$output" http://<ipaddr>:<port>/upload/
+
+These uploaded files are stored under the directory set by the
+TEST_UPLOAD_DIR variable in settings.py.
+
+The system uses a simple convention in these files to lookup
+information. It parses the lines to store informations, warnings and
+errors lines if they begin by 'I: ', 'W: ' and 'E: '. The system also
+tries to find the version of the system by looking for a line starting
+by 'V: '.
+
+You can then navigate on web pages displaying these parsed
+informations under: http://<ipaddr>:<port>/.
+
+*** Control
+
+To instruct the system about which tests are available, use the
+following command:
+
+pxemngr synctestnames
+
+To assign a test to a target system, use the following command:
+
+pxemngr nexttest <system name> <test name>
+
+To display all the tests ran or scheduled for a system, use:
+
+pxemngr dpytest <system name>
 
