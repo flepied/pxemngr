@@ -28,14 +28,15 @@ def set_next_test(system, name, abort=True):
     log = TestLog(system=system, test_name=test_name)
     log.save()
 
-if len(sys.argv) != 3:
-    error('Usage: %s <system name> <test name>' % sys.argv[0])
-    
+if len(sys.argv) < 3:
+    error('Usage: %s <system name> <test name> [<test name2>...]' % sys.argv[0])
+
 try:
     system = System.objects.get(name=sys.argv[1])
 except System.DoesNotExist:
     error('System %s not defined' % sys.argv[1])
 
-set_next_test(system, sys.argv[2])
+for testname in sys.argv[2:]:
+    set_next_test(system, testname)
 
 # nexttest ends here
