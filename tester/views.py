@@ -113,5 +113,8 @@ def content(request, logid):
 def index(request):
     versions = SystemVersion.objects.all().order_by('-id')
     return render_to_response('index.html', {'versions': versions})    
-    
+
+def script(request, name):
+    return render_to_response(name + settings.TEST_SUFFIX, {'testname': name, 'system': 'system', 'log': None})
+
 # views.py ends here
