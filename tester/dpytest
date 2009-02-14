@@ -29,7 +29,7 @@ else:
     
     print 'Name:', system.name
     
-    logs = TestLog.objects.filter(system=system).order_by('-date')
+    logs = TestLog.objects.filter(system=system, status='R').order_by('-date')
 
     for l in logs:
         print l.date, l.test_name.name, l.status
