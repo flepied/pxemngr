@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>System info</h2>
+<table>
+  <tr><th>Name</th><td>{{ system.name }}</td></tr>
+</table>
+
+<h3>Last 10 PXE requests</h3>
+<ul>
+{% for log in boots %}
+<li>{{ log.date }} {{ log.boot_name }}</li>
+{% endfor %}
+</ul>
+
+<h3>Tests</h3>
+<ul>
+{% for log in logs %}
+<li><a href="/test/{{ log.id }}/">{{ log.version }} {{ log.test_name.name }}</a> ({% ifequal log.status 'D' %}{{ log.errors }} errors{% else %}{{ log.status }}{% endifequal %})</li>
+{% endfor %}
+</ul>
+{% endblock %}

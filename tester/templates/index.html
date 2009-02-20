@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Versions</h1>
+<h2>Systems</h2>
+<ul>
+{% for system in systems %}
+<li><a href="/system/{{ system.id }}/">{{ system.name }}</a></li>
+{% endfor %}
+</ul>
+<h2>Versions</h2>
 <ul>
 {% for version in versions %}
 <li><a href="/tests/{{ version.id }}/">{{ version.name }}</a></li>

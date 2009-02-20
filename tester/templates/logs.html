@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Test reports for version {{ version.name }}</h1> 
+<h2>Test reports for version {{ version.name }}</h2> 
 <ul>
 {% for log in logs %}
 <li><a href="/test/{{ log.id }}/">{{ log.test_name.name }}</a> ({% ifequal log.status 'D' %}{{ log.errors }} errors{% else %}{{ log.status }}{% endifequal %} on {{ log.system }})</li>

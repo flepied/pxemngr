@@ -112,9 +112,16 @@ def content(request, logid):
 
 def index(request):
     versions = SystemVersion.objects.all().order_by('-id')
-    return render_to_response('index.html', {'versions': versions})    
+    systems = System.objects.all().order_by('name')
+    return render_to_response('index.html', {'versions': versions, 'systems': systems})    
 
 def script(request, name):
     return render_to_response(name + settings.TEST_SUFFIX, {'testname': name, 'system': 'system', 'log': None})
+
+def system(request, sysid):
+    s = get_object_or_404(System, id=sysid)
+    testlogs = TestLog.objects.filter(system=s).order_by('-date')
+    logs = Log.objects.filter(system=s).order_by('-date')[0:10]
+    return render_to_response('system.html', {'system': s, 'logs': testlogs, 'boots': logs})    
 
 # views.py ends here

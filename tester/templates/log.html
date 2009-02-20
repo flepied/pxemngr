@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
+<h2>Test info</h2>
 <table>
   <tr><th>Name</th><td>{{ log.test_name.name }}</td></tr>
   <tr><th>System</th><td>{{ log.system.name }}</td></tr>
   <tr><th>Date</th><td>{{ log.date }}</td></tr>
+  <tr><th>Status</th><td>{{ log.status }}</td></tr>
+{% ifequal log.status 'D' %}
   <tr><th>Version</th><td>{{ log.version.name }}</td></tr>
   <tr><th>Errors</th><td>{{ log.errors }}</td></tr>
   <tr><th>Warning</th><td>{{ log.warnings }}</td></tr>
@@ -18,4 +21,7 @@
 </ol>
 
 <a href="/testcontent/{{ log.id }}/">complete log</a>
+{% else %}
+</table>
+{% endifequal %}
 {% endblock %}
