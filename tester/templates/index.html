@@ -13,4 +13,10 @@
 <li><a href="/tests/{{ version.id }}/">{{ version.name }}</a></li>
 {% endfor %}
 </ul>
+<h2>Tests</h2>
+<ul>
+{% for testname in testnames %}
+<li><a href="/testname/{{ testname.id }}/">{{ testname }}</a></li>
+{% endfor %}
+</ul>
 {% endblock %}

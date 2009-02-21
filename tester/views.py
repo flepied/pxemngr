@@ -113,7 +113,10 @@ def content(request, logid):
 def index(request):
     versions = SystemVersion.objects.all().order_by('-id')
     systems = System.objects.all().order_by('name')
-    return render_to_response('index.html', {'versions': versions, 'systems': systems})    
+    testnames = TestName.objects.filter(available=True).order_by('name')
+    return render_to_response('index.html', {'versions': versions,
+                                             'systems': systems,
+                                             'testnames': testnames})    
 
 def script(request, name):
     return render_to_response(name + settings.TEST_SUFFIX, {'testname': name, 'system': 'system', 'log': None})
@@ -123,5 +126,10 @@ def system(request, sysid):
     testlogs = TestLog.objects.filter(system=s).order_by('-date')
     logs = Log.objects.filter(system=s).order_by('-date')[0:10]
     return render_to_response('system.html', {'system': s, 'logs': testlogs, 'boots': logs})    
+
+def testname(request, tstid):
+    name = get_object_or_404(TestName, id=tstid)
+    logs = TestLog.objects.filter(test_name=name).order_by('-date')
+    return render_to_response('tests.html', {'logs': logs, 'testname': name})    
 
 # views.py ends here

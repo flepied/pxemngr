@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     (r'^testcontent/(?P<logid>[0-9]+)/$', 'tester.views.content'),
     (r'^script/(?P<name>.+)/$', 'tester.views.script'),
     (r'^system/(?P<sysid>[0-9]+)/$', 'tester.views.system'),
+    (r'^testname/(?P<tstid>[0-9]+)/$', 'tester.views.testname'),
 
     # Uncomment the next line to enable the admin:
     (r'^admin/(.*)', admin.site.root),
