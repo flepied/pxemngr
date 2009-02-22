@@ -1,3 +1,10 @@
+* 22 Feb 2009: 0.4:
+      o web interface: more navigation pages: by test names, system names and versions.
+      o improved admin views by providing better names for the all the objects.
+      o dpytest: display only requested tests.
+      o fixed bad test matching in the upload logic by passing the test id to the upload url.
+      o nexttest: allow to request multiple tests in one call.
+      o documented the test system.
 * 12 Feb 2009: 0.3:
       o added a test automation system integrated with the PXE management.
       o simplify the urls by finding the mac addresses automatically.
