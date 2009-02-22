@@ -1,0 +1,11 @@
+* 12 Feb 2009: 0.3:
+      o added a test automation system integrated with the PXE management.
+      o simplify the urls by finding the mac addresses automatically.
+      o activate the admin interface by default.
+* 06 Feb 2009: 0.2:
+      o added a contrib directory with a generic installer based on a debian debootstrap.
+      o added a pxemngr command to launch the sub-commands and to avoid to pollute the
+        global namespace with a lot of commands.
+      o added an install target in the Makefile to allow to install the pxemngr on a system.
+      o syncbootname checks that the local profile is defined.
+* 05 Feb 2009: 0.1: Initial release
