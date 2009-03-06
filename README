@@ -41,6 +41,9 @@ pxemngr addsystem <name> <mac address> [<mac address 2>...]
 
 pxemngr nextboot <name> <profile name>
 
+If you want to assign a default profile to all systems, use the
+reserved system name 'default'.
+
 - run ./manage.py runserver <ip addr>:<port> to have a web server
   waiting for requests to boot locally. You can also configure django
   to use apache instead of the little embedded server.
@@ -68,8 +71,8 @@ http://<ipaddr>:<port>/nexttest/
 The tests are usually shell scripts that are built using Django
 templating system. By convention, the tests are usinf a suffix of
 .test. They are stored in the directory set in settings.py under the
-TESTS_DIR variable. A wait.test must exist and will be send by the
-server to the target system when no test are available. This wait.test
+TESTS_DIR variable. A wait.test must exist and will be sent by the
+server to the target system when no test is available. This wait.test
 must wait for some time and then exit to let the system send a new
 test if needed or send back a new wait.test.
 
@@ -102,7 +105,11 @@ To assign a test to a target system, use the following command:
 
 pxemngr nexttest <system name> <test name>
 
-To display all the tests ran or scheduled for a system, use:
+To display all the tests scheduled for a system, use:
 
 pxemngr dpytest <system name>
 
+*** Web navigation
+
+By pointing your browser to http://<ipaddr>:<port>/, you can navigate
+in the results of the test system.

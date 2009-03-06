@@ -49,6 +49,11 @@ def mac2filename(m):
     s = s + '%s' % m[10:12]
     return s
 
+def create_symlink(src, dst):
+    if os.path.exists(dst):
+        os.unlink(dst)
+    os.symlink(src, dst)
+    
 def set_next_boot(system, name, abort=True):
     try:
         boot_name = BootName.objects.get(name=name)
@@ -57,13 +62,16 @@ def set_next_boot(system, name, abort=True):
             error('Boot name %s not defined' % name)
         else:
             raise BootName.DoesNotExist
-        
+
+    prof = '%s/%s%s' % (settings.PXE_PROFILES, boot_name.name, settings.PXE_SUFFIX)
+    
     for m in MacAddress.objects.filter(system=system):
         dst = '%s/01-%s' % (settings.PXE_ROOT, mac2filename(m.mac))
-        if os.path.exists(dst):
-            os.unlink(dst)
-        os.symlink('%s/%s%s' % (settings.PXE_PROFILES, boot_name.name, settings.PXE_SUFFIX),
-                   dst)
+        create_symlink(prof, dst)
+        
+    if system.name == 'default':
+        create_symlink(prof, '%s/default' % (settings.PXE_ROOT))
+
     log = Log(system=system, boot_name=boot_name)
     log.save()
 

@@ -17,11 +17,17 @@ from pxe.common import *
 
 if len(sys.argv) != 3:
     error('Usage: %s <system name> <boot name>' % sys.argv[0])
-    
+
+name = sys.argv[1]
+
 try:
-    system = System.objects.get(name=sys.argv[1])
+    system = System.objects.get(name=name)
 except System.DoesNotExist:
-    error('System %s not defined' % sys.argv[1])
+    if name == 'default':
+        system = System(name=name)
+        system.save()
+    else:
+        error('System %s not defined' % name)
 
 set_next_boot(system, sys.argv[2])
 

@@ -17,6 +17,9 @@ from pxe.common import *
 if len(sys.argv) < 3:
     error('Usage: %s <system name> <MAC> [<MAC2>...]' % sys.argv[0])
 
+if sys.argv[1] == 'default':
+    error('default is a reserved name and cannot be used for a system name')
+    
 try:
     system = System.objects.get(name=sys.argv[1])
 except System.DoesNotExist:
