@@ -5,12 +5,12 @@
 The idea is to build an automaton to control when to boot from the
 local drives and when to boot from the network.
 
-The systems can be used to run automated tests. You can also use this
+The system can be used to run automated tests. You can also use this
 system only to provision on demand systems or backup your partitions
 using partimage or anything you want to do with an automated PXE
 system...
 
-The systems must be configured to always boot over PXE.
+The controlled systems must be configured to always boot over PXE.
 
 ** Install
 
