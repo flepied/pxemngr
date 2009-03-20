@@ -30,16 +30,18 @@ else:
     
     for mac in MacAddress.objects.filter(system=system):
         print 'Mac:',
+        r = ''
         for i in range(0, 10, 2):
-            sys.stdout.write('%s:' % mac.mac[i:i+2])
-        sys.stdout.write('%s\n' % mac.mac[10:12])
+            r = r +  '%s:' % mac.mac[i:i+2]
+        r = r + mac.mac[10:12]
+        print '%s (%s)' % (r, mac_to_ip(r))
     
     logs = Log.objects.filter(system=system).order_by('-date')
     if len(logs) >= 1:
         print 'Next boot:', logs[0].boot_name.name
     
     print 'History:'
-    for l in logs[1:]:
+    for l in logs[1:10]:
         print l.date, l.boot_name.name
     
 # addsystem ends here
