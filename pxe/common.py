@@ -75,9 +75,11 @@ def set_next_boot(system, name, abort=True):
 
     prof = '%s/%s%s' % (settings.PXE_PROFILES, boot_name.name, settings.PXE_SUFFIX)
     
+    name_dst = '%s/%s' % (settings.PXE_ROOT, system.name)
+    create_symlink(prof, name_dst)
     for m in MacAddress.objects.filter(system=system):
         dst = '%s/01-%s' % (settings.PXE_ROOT, mac2filename(m.mac))
-        create_symlink(prof, dst)
+        create_symlink(system.name, dst)
         
     if system.name == 'default':
         create_symlink(prof, '%s/default' % (settings.PXE_ROOT))

@@ -1,0 +1,23 @@
+#!/usr/bin/python
+#---------------------------------------------------------------
+# Project         : pxemngr
+# File            : syncsystems
+# Version         : $Id$
+# Author          : Frederic Lepied
+# Created On      : Tue Sep  1 11:46:57 2009
+# Purpose         : 
+#---------------------------------------------------------------
+
+import os
+import settings
+from pxe.models import *
+from pxe.common import *
+
+for s in System.objects.all():
+    l = Log.objects.filter(system=s).order_by('-date')
+    if len(l) > 0:
+        set_next_boot(l[0].system, l[0].boot_name.name)
+    else:
+        print 'no boot defined for', s.name
+
+# syncsystems ends here
