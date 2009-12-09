@@ -13,8 +13,8 @@ import re
 import settings
 from models import *
 
-MAC_REGEXP = re.compile('^.*\s([0-9A-F:]+)\s.*')
-IP_REGEXP = re.compile('^([0-9.]+).*\s[0-9A-F:]+\s.*')
+MAC_REGEXP = re.compile('^.*\s([0-9a-f:]+)\s.*', re.I)
+IP_REGEXP = re.compile('^([0-9.]+).*\s[0-9a-f:]+\s.*', re.I)
 
 def ip_to_mac(ip):
     for line in open('/proc/net/arp').readlines():
@@ -36,6 +36,7 @@ def mac_to_ip(mac):
 def get_mac(request):
     mac = ip_to_mac(request.META['REMOTE_ADDR'])
     if not mac:
+        print 'no mac for', request.META['REMOTE_ADDR']
         raise Http404
     return mac
     
