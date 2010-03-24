@@ -1,3 +1,7 @@
+* 24 Mar 2010: 0.6
+      o common: use another level of symlink to have the names of the systems appear.
+      o syncsystems: rebuild all the symlinks from the content of the database.
+      o dpysystem: display IP addresses if present.
 * 06 Mar 2009: 0.5
       o added the support to manage the default pxe boot.
 * 22 Feb 2009: 0.4:
