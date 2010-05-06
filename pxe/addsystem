@@ -14,7 +14,7 @@ import settings
 from pxe.models import *
 from pxe.common import *
 
-if len(sys.argv) < 3:
+if len(sys.argv) < 2:
     error('Usage: %s <system name> <MAC> [<MAC2>...]' % sys.argv[0])
 
 if sys.argv[1] == 'default':
