@@ -79,7 +79,10 @@ def set_next_boot(system, name, abort=True):
     name_dst = '%s/%s' % (settings.PXE_ROOT, system.name)
     create_symlink(prof, name_dst)
     for m in MacAddress.objects.filter(system=system):
-        dst = '%s/01-%s' % (settings.PXE_ROOT, mac2filename(m.mac))
+        if len(m.mac) == 12:
+            dst = '%s/01-%s' % (settings.PXE_ROOT, mac2filename(m.mac))
+        else:
+            dst = '%s/%s' % (settings.PXE_ROOT, m.mac)
         create_symlink(system.name, dst)
         
     if system.name == 'default':
@@ -87,5 +90,13 @@ def set_next_boot(system, name, abort=True):
 
     log = Log(system=system, boot_name=boot_name)
     log.save()
+
+def simplify_ip(ip):
+    '''Rertun a string containing the hexadecimal representation of an ipv4 address or a sub-part.'''
+    l = ip.split('.')
+    s = ''
+    for e in l:
+        s = s + '%02x' % int(e)
+    return s
 
 # common.py ends here

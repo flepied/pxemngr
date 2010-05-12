@@ -14,7 +14,7 @@ import settings
 from pxe.models import *
 from pxe.common import *
 
-if len(sys.argv) < 2:
+if len(sys.argv) < 3:
     error('Usage: %s <system name> <MAC> [<MAC2>...]' % sys.argv[0])
 
 if sys.argv[1] == 'default':
@@ -27,7 +27,10 @@ except System.DoesNotExist:
     system.save()
 
 for addr in sys.argv[2:]:
-    a = simplify_mac(addr)
+    if addr.index('.') >= 0:
+        a = simplify_ip(addr)
+    else:
+        a = simplify_mac(addr)
     try:
         mac = MacAddress.objects.get(mac=a)
         if mac.system != system:
