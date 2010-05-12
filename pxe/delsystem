@@ -1,0 +1,24 @@
+#!/usr/bin/python
+#---------------------------------------------------------------
+# Project         : pxe
+# File            : delsystem
+# Version         : $Id$
+# Author          : Frederic Lepied
+# Created On      : Wed May 12 10:01:29 2010
+# Purpose         : delete the database entries for a given system
+#---------------------------------------------------------------
+
+import sys
+from pxe.models import *
+
+if len(sys.argv) != 2:
+    error('Usage: %s <system name>' % sys.argv[0])
+
+try:
+    system = System.objects.get(name=sys.argv[1])
+except System.DoesNotExist:
+    error('System %s not defined' % sys.argv[1])
+
+system.delete()
+
+# delsystem ends here
