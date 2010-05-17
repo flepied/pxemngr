@@ -7,7 +7,7 @@
 # Purpose         : build rules
 #---------------------------------------------------------------
 
-VERSION=0.7
+VERSION=0.7.1
 
 bindir=/usr/bin
 libdir=/usr/share/pxemngr
@@ -23,7 +23,7 @@ install:
 	install pxe/pxemngr $(DESTDIR)$(bindir)/pxemngr
 	install -m 644 pxe/pxemngr.conf $(DESTDIR)$(etcdir)/pxemngr.conf
 	install *.py $(DESTDIR)$(libdir)/
-	install pxe/*.py pxe/{addsystem,dpysystem,nextboot,syncbootnames} $(DESTDIR)$(libdir)/pxe/
+	install pxe/*.py pxe/{addsystem,dpysystem,nextboot,syncbootnames,delsystem} $(DESTDIR)$(libdir)/pxe/
 	install tester/*.py tester/{dpytest,nexttest,synctestnames} $(DESTDIR)$(libdir)/tester/
 
 dist: clean

@@ -1,3 +1,6 @@
+* 17 May 2010: 0.7.1
+      o use IP addresses hexa mask in uppercase to be in sync with tftp conventions use by PXE.
+      o really distribute delsystem in archive.
 * 12 May 2010: 0.7
       o allow to use IP addresses and sub-adresses instead of mac addresses.
       o delsystem: new command to remove a system from the database.
