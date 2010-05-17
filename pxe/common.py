@@ -1,7 +1,7 @@
 #---------------------------------------------------------------
 # Project         : pxemngr
 # File            : common.py
-# Copyright       : 2009 Splitted-Desktop Systems
+# Copyright       : 2009-2010 Splitted-Desktop Systems
 # Author          : Frederic Lepied
 # Created On      : Sun Feb  1 19:03:58 2009
 # Purpose         : common functions used by scripts and web logic.
@@ -96,7 +96,7 @@ def simplify_ip(ip):
     l = ip.split('.')
     s = ''
     for e in l:
-        s = s + '%02x' % int(e)
+        s = s + '%02X' % int(e)
     return s
 
 # common.py ends here
