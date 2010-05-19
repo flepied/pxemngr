@@ -27,7 +27,7 @@ except System.DoesNotExist:
     system.save()
 
 for addr in sys.argv[2:]:
-    if addr.index('.') >= 0:
+    if '.' in addr:
         a = simplify_ip(addr)
     else:
         a = simplify_mac(addr)
