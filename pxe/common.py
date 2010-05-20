@@ -54,12 +54,18 @@ def simplify_mac(s):
     return sss.lower()
 
 def mac2filename(m):
-    s = ''
+    s = '01-'
     for i in range(0, 10, 2):
         s = s + '%s-' % m[i:i+2]
     s = s + '%s' % m[10:12]
     return s
 
+def mac2path(mac):
+    if len(mac) == 12:
+        return '%s/%s' % (settings.PXE_ROOT, mac2filename(mac))
+    else:
+        return '%s/%s' % (settings.PXE_ROOT, mac)
+    
 def create_symlink(src, dst):
     if os.path.exists(dst):
         os.unlink(dst)
@@ -79,10 +85,7 @@ def set_next_boot(system, name, abort=True):
     name_dst = '%s/%s' % (settings.PXE_ROOT, system.name)
     create_symlink(prof, name_dst)
     for m in MacAddress.objects.filter(system=system):
-        if len(m.mac) == 12:
-            dst = '%s/01-%s' % (settings.PXE_ROOT, mac2filename(m.mac))
-        else:
-            dst = '%s/%s' % (settings.PXE_ROOT, m.mac)
+        dst = mac2path(m.mac)
         create_symlink(system.name, dst)
         
     if system.name == 'default':
