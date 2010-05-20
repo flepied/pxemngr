@@ -1,3 +1,8 @@
+* 20 May 2010: 0.7.2
+      o localboot request now changes the symlink only for real mac
+      address (not for network specs) else it will create a new
+      symlink with the mac address from the request.
+      o delsystem: also remove files in the PXE_ROOT.
 * 17 May 2010: 0.7.1
       o use IP addresses hexa mask in uppercase to be in sync with tftp conventions use by PXE.
       o really distribute delsystem in archive.

@@ -7,7 +7,7 @@
 # Purpose         : build rules
 #---------------------------------------------------------------
 
-VERSION=0.7.1
+VERSION=0.7.2
 
 bindir=/usr/bin
 libdir=/usr/share/pxemngr
