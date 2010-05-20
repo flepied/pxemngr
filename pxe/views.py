@@ -1,7 +1,7 @@
 #---------------------------------------------------------------
 # Project         : pxemngr
 # File            : views.py
-# Copyright       : 2009 Splitted-Desktop Systems
+# Copyright       : 2009-2010 Splitted-Desktop Systems
 # Author          : Frederic Lepied
 # Created On      : Sun Feb  1 13:54:41 2009
 # Purpose         : http logic
@@ -31,8 +31,13 @@ def localboot1(request):
     return localboot(request, get_mac(request))
     
 def localboot(request, mac):
-    system = get_system(request, mac)
-    set_next_boot(system, settings.PXE_LOCAL)
+    try:
+        system = System.objects.get(macaddress__mac=simplify_mac(mac))
+        set_next_boot(system, settings.PXE_LOCAL)
+    except System.DoesNotExist:
+        fn = '%s/%s' % (settings.PXE_ROOT, mac2filename(simplify_mac(mac)))
+        create_symlink('%s/%s%s' % (settings.PXE_PROFILES, settings.PXE_LOCAL, settings.PXE_SUFFIX), fn)
+    
     return HttpResponse("Next boot set to local", mimetype="text/plain")
 
 def profile1(request):
