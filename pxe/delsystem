@@ -2,7 +2,7 @@
 #---------------------------------------------------------------
 # Project         : pxe
 # File            : delsystem
-# Version         : $Id$
+# Copyright       : 2010 Splitted-Desktop Systems
 # Author          : Frederic Lepied
 # Created On      : Wed May 12 10:01:29 2010
 # Purpose         : delete the database entries for a given system
@@ -10,6 +10,8 @@
 
 import sys
 from pxe.models import *
+import settings
+from pxe.common import *
 
 if len(sys.argv) != 2:
     error('Usage: %s <system name>' % sys.argv[0])
@@ -18,6 +20,17 @@ try:
     system = System.objects.get(name=sys.argv[1])
 except System.DoesNotExist:
     error('System %s not defined' % sys.argv[1])
+
+list = ['%s/%s' % (settings.PXE_ROOT, system.name), ]
+
+for m in MacAddress.objects.filter(system=system):
+    list.append(mac2path(m.mac))
+
+for f in list:
+    try:
+        os.unlink(f)
+    except OSError:
+        pass
 
 system.delete()
 
