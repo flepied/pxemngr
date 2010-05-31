@@ -2,12 +2,12 @@
 #---------------------------------------------------------------
 # Project         : pxemngr
 # File            : dpysystem
-# Copyright       : 2009 Splitted-Desktop Systems
+# Copyright       : 2009-2010 Splitted-Desktop Systems
 # Author          : Frederic Lepied
 # Created On      : Sun Feb  1 13:54:41 2009
-# Purpose         : report the list of systems or informations
-#                 about one system.
 #---------------------------------------------------------------
+
+"""Reports the list of systems or displays informations about one system."""
 
 import sys
 import settings
@@ -15,7 +15,7 @@ from pxe.models import *
 from pxe.common import *
 
 if len(sys.argv) != 2:
-    error('Usage: %s <system name>|-l' % sys.argv[0])
+    error('Usage: %s <system name|MAC|IPV4>|-l' % sys.argv[0])
 
 if sys.argv[1] == '-l':
     for s in System.objects.all():
@@ -24,18 +24,34 @@ else:
     try:
         system = System.objects.get(name=sys.argv[1])
     except System.DoesNotExist:
-        error('System %s not defined' % sys.argv[1])
+        try:
+            if len(sys.argv[1]) == 17:
+                system = System.objects.get(macaddress__mac=simplify_mac(sys.argv[1]))
+            else:
+                if '.' in sys.argv[1]:
+                    system = System.objects.get(macaddress__mac=simplify_ip(sys.argv[1]))
+                else:
+                    system = System.objects.get(macaddress__mac=sys.argv[1].upper())
+        except System.DoesNotExist:
+            error('System %s not defined' % sys.argv[1])
     
     print 'Name:', system.name
     
     for mac in MacAddress.objects.filter(system=system):
         print 'Mac:',
         r = ''
-        for i in range(0, 10, 2):
-            r = r +  '%s:' % mac.mac[i:i+2]
-        r = r + mac.mac[10:12]
-        print '%s (%s)' % (r, mac_to_ip(r))
-    
+        if len(mac.mac) == 12:
+            for i in range(0, 10, 2):
+                r = r +  '%s:' % mac.mac[i:i+2]
+            r = r + mac.mac[10:12]
+            print '%s (%s)' % (r, mac_to_ip(r))
+        else:
+            l = len(mac.mac)
+            for i in range(0, l - 2, 2):
+                r = r +  '%d.' % int(mac.mac[i:i+2], 16)
+            r = r +  '%d (%s)' % (int(mac.mac[l-2:l], 16), mac.mac)
+            print r
+            
     logs = Log.objects.filter(system=system).order_by('-date')
     if len(logs) >= 1:
         print 'Next boot:', logs[0].boot_name.name
